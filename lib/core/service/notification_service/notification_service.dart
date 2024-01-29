@@ -53,7 +53,8 @@ class NotificationService {
     });
   }
 
-  void firebaaseInit(BuildContext context) {
+  void firebaaseInit(BuildContext context) async{
+    await messaging.setAutoInitEnabled(true);
     FirebaseMessaging.onMessage.listen((message) {
       print(message.notification!.title.toString());
       print(message.notification!.body.toString());

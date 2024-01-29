@@ -1,9 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loc_camp_app/core/widgets/indicator_widget.dart';
 import 'package:loc_camp_app/core/widgets/state_handler_widget.dart';
 import 'package:loc_camp_app/features/users/logic/users_cubit.dart';
+import 'package:loc_camp_app/features/users/ui/widget/app_bar_widget.dart';
 import 'package:loc_camp_app/features/users/ui/widget/user_card_widget.dart';
 import '../../logic/users_state.dart';
 import 'slide_fade_animation.dart';
@@ -53,9 +54,8 @@ class _UsersWidgetState extends State<UsersWidget> {
   Widget build(BuildContext context) {
     var users = UsersCubit.users;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Infinite Scroll'),
-      ),
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(60), child: AppBarWidget()),
       body: BlocListener<UsersCubit, UsersState>(
         listenWhen: (previous, current) =>
             current is Loading ||
@@ -63,125 +63,41 @@ class _UsersWidgetState extends State<UsersWidget> {
             current is Error ||
             current is IsConnected,
         listener: (context, state) {
-          state.whenOrNull(
-            isConnected: () {
-              StateHandler.setupErrorState(context, 'No Internet Connection');
-            },
-            loading: () {
-              print(_data[0].toString()+"adffffffffffffff");
-            },
-            success: (data){
-              print(data.toString()+'dsAAAAAAAAAA');
-            }
-          );
+          state.whenOrNull(isConnected: () {
+            StateHandler.setupErrorState(context, 'No Internet Connection');
+          }, loading: () {
+            debugPrint(_data[0].toString() + "adffffffffffffff");
+          }, success: (data) {
+            debugPrint(data.toString() + 'dsAAAAAAAAAA');
+          });
         },
-        child: users.isNotEmpty ? ListView.builder(
-          controller: _scrollController,
-          itemCount: _data.length + 1,
-          // itemCount: UsersCubit.users.length,
-          itemBuilder: (context, index) {
-            print(users.length);
-            if (index < _data.length) {
-              return SlideFadeAnimation(
-                index: index,
-                animationDuration: 1000,
-                verticalOffset: 200,
-                child: UserCardWidget(user: users[index],)
-                /*Expanded(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width.w,
-                    padding: EdgeInsets.all(5.0),
-                    height: 160.h,
-                    child: GestureDetector(
-                      child: Flexible(
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0.h),
-                          ),
-                          color: Colors.white,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              IconButton(
-                                  icon: Icon(Icons.favorite),
-                                  iconSize: 25.h,
-                                  color: Colors.black,
-                                  onPressed: () {}),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: CircleAvatar(
-                                  child: ClipOval(
-                                    /*child: Image.network(
-                                  '',
-                                  //users[index].image!,
-                                  height: 150.h,
-                                  width: 150.w,
-                                  fit: BoxFit.fill,
-                                ),*/
-                                  ),
-                                  radius: 60.sp,
-                                ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.0.sp),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        users[index].address!.street!,
-                                        style: TextStyle(
-                                            fontSize: 12.h, color: Colors.black),
-                                        textAlign: TextAlign.justify,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                      ),
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: Icon(Icons.add_shopping_cart),
-                                            iconSize: 25.h,
-                                            color: Colors.blue,
-                                            onPressed: () {},
-                                          ),
-                                          SizedBox(
-                                            width: 55.w,
-                                          ),
-                                          Expanded(
-                                            child: Text(
-                                              "${users[index].phone} \$",
-                                              style:
-                                              TextStyle(color: Colors.black),
-                                              overflow: TextOverflow.ellipsis,
-                                              //maxLines: 1,
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      onTap: () {},
-                    ),
-                  ),
-                ),*/
-              );
-            } else {
-              if(index != users.length){
-                return IndicatorWidget();
-
-              }
-
-            }
-          },
-        ) : IndicatorWidget(),
+        child: users.isNotEmpty
+            ? Padding(
+              padding: EdgeInsets.symmetric(vertical: 18.0.h),
+              child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: _data.length + 1,
+                  // itemCount: UsersCubit.users.length,
+                  itemBuilder: (context, index) {
+                    debugPrint(users.length.toString());
+                    if (index < _data.length) {
+                      return SlideFadeAnimation(
+                          index: index,
+                          animationDuration: 1000,
+                          verticalOffset: 200,
+                          child: UserCardWidget(
+                            user: users[index],
+                          ));
+                    } else {
+                      if (index != users.length) {
+                        return IndicatorWidget();
+                      }
+                    }
+                  },
+                ),
+            )
+            : IndicatorWidget(),
       ),
     );
   }
-
 }

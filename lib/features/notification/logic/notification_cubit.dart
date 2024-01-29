@@ -32,11 +32,9 @@ class NotificationCubit extends Cubit<NotificationState> {
   }
 
   void emitSendNotification() async{
-    //DataModel d = DataModel(id: '5647546', type: 'msj');
     NotificationDataModel nd = NotificationDataModel(
-        body: 'Ali Mo', title: 'Welcom To Your App');
+        body: 'How are you? ', title: 'Welcom To Our World');
     NotificationModel n = NotificationModel(
-        //data: d,
         notification: nd,
         priority: 'high',
         to: await notificationService.getDeviceToken(),

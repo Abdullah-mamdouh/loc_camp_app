@@ -44,7 +44,7 @@ class UserCardWidget extends StatelessWidget {
                   Expanded(
                     child: Text(
                       user.name.toString(),
-                      maxLines: 2,
+                      maxLines: 1,
                       softWrap: true,
                       overflow: TextOverflow.fade,
                       style: TextStyles.font24BlackBold,
@@ -60,9 +60,14 @@ class UserCardWidget extends StatelessWidget {
                 style: TextStyles.font13DarkBlueMedium,
               ),
               verticalSpace(10),
-              Text(
-                ' ${user.address}',
-                style: TextStyles.font14GrayRegular,
+              Row(
+                children: [
+                  Icon(Icons.location_on, color: ColorsManager.lightGray,),
+                  Text(
+                    ' ${user.address?.street!}',
+                    style: TextStyles.font14GrayRegular,
+                  ),
+                ],
               ),
             ],
           ))

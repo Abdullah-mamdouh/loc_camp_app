@@ -1,5 +1,15 @@
 
 
+import 'package:firebase_core/firebase_core.dart';
+
+/// init options of firebase
+ const firebaseOptions  = FirebaseOptions(
+    apiKey: "AIzaSyDshn-ePSi8Wwm5VTRB3M1gY2zpJPZyFFU",
+    appId: "1:874048799407:android:17dd5e1124da6432f88a5a",
+    messagingSenderId: "874048799407",
+    projectId: "loc-camp-app");
+
+ /// expected errors of firebase auth
 class FirebaseErrors {
   // static const String successful =
   //     "Your email address appears to be malformed.";
